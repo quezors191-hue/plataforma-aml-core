@@ -4,8 +4,71 @@ from thefuzz import process, fuzz
 import re
 import os
 
-# 1. Configuración de página
+# 1. Configuración de página (SIEMPRE en la primera línea)
 st.set_page_config(page_title="Plataforma AML", layout="wide")
+
+# Ajuste CSS Corporativo global (aplica tanto al Login como al Buscador)
+st.markdown("""
+<style>
+    div.stButton > button:first-child, div.stFormSubmitButton > button:first-child {
+        background-color: #0F172A;
+        color: white;
+        border-radius: 4px;
+        padding: 10px 24px;
+        font-weight: 600;
+        border: none;
+    }
+    div.stButton > button:first-child:hover, div.stFormSubmitButton > button:first-child:hover {
+        background-color: #1D4ED8;
+        color: white;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# --- CONFIGURACIÓN DE CREDENCIALES (3 USUARIOS Y 3 CONTRASEÑAS) ---
+USUARIOS_AUTORIZADOS = {
+    "admin_aml": "Cumplimiento2026*",
+    "analista_senior": "Auditoria#849",
+    "gerencia_riesgos": "Directivo$AML99"
+}
+
+# Inicializar estado de sesión
+if "autenticado" not in st.session_state:
+    st.session_state["autenticado"] = False
+if "usuario_actual" not in st.session_state:
+    st.session_state["usuario_actual"] = ""
+
+# --- PANTALLA DE INICIO DE SESIÓN ---
+if not st.session_state["autenticado"]:
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    col_l1, col_l2, col_l3 = st.columns([1, 1.2, 1])
+    
+    with col_l2:
+        st.title("Acceso al Sistema AML")
+        st.markdown("Plataforma corporativa de debida diligencia y cumplimiento normativo. Ingrese sus credenciales asignadas.")
+        st.divider()
+        
+        with st.form("formulario_login", clear_on_submit=False):
+            usuario_input = st.text_input("Usuario", placeholder="Ingrese su usuario")
+            clave_input = st.text_input("Contraseña", type="password", placeholder="Ingrese su contraseña")
+            st.markdown("<br>", unsafe_allow_html=True)
+            btn_login = st.form_submit_button("Iniciar Sesión", use_container_width=True)
+            
+            if btn_login:
+                usuario_limpio = usuario_input.strip()
+                if usuario_limpio in USUARIOS_AUTORIZADOS and USUARIOS_AUTORIZADOS[usuario_limpio] == clave_input:
+                    st.session_state["autenticado"] = True
+                    st.session_state["usuario_actual"] = usuario_limpio
+                    st.rerun()
+                else:
+                    st.error("Credenciales inválidas. Verifique su usuario y contraseña.")
+                    
+    # Detiene la ejecución aquí para que nadie vea el sistema sin iniciar sesión
+    st.stop()
+
+# =====================================================================
+# A PARTIR DE AQUÍ SOLO SE EJECUTA SI EL USUARIO INICIÓ SESIÓN CON ÉXITO
+# =====================================================================
 
 # --- FUNCIONES DEL MOTOR DE DATOS ---
 def traducir_fuentes(fuentes_crudas):
@@ -80,6 +143,14 @@ coleccion = client["antecedentes_db"]["sanciones"]
 
 # --- BARRA LATERAL ---
 with st.sidebar:
+    st.caption(f"Sesión activa: **{st.session_state['usuario_actual']}**")
+    if st.button("Cerrar Sesión", use_container_width=True):
+        st.session_state["autenticado"] = False
+        st.session_state["usuario_actual"] = ""
+        st.rerun()
+        
+    st.divider()
+    
     st.title("Enlaces Oficiales")
     st.markdown("Portales gubernamentales e internacionales para validación manual de debida diligencia.")
     
@@ -117,7 +188,6 @@ with st.sidebar:
     """)
 
 # --- INTERFAZ VISUAL ---
-st.markdown("<style>div.stButton > button:first-child {background-color: #0F172A; color: white; border-radius: 4px; padding: 10px 24px; font-weight: 600; border: none;} div.stButton > button:first-child:hover {background-color: #1D4ED8; color: white;}</style>", unsafe_allow_html=True)
 st.title("Plataforma de Debida Diligencia y AML")
 st.markdown("Sistema automatizado de cruce de datos contra listas restrictivas y vinculantes a nivel global: \n**Oficina de Control de Activos Extranjeros (OFAC SDN & Non-SDN), Consejo de Seguridad de las Naciones Unidas (ONU), Organización Internacional de Policía Criminal (Interpol - Notificaciones Rojas), Sanciones Financieras de la Unión Europea (UE), Departamento de Estado de EE.UU. (Organizaciones Terroristas Extranjeras - FTO) y más de 15 agencias gubernamentales internacionales consolidadas.**")
 st.divider()
