@@ -5,31 +5,85 @@ import re
 import os
 
 # 1. Configuración de página (SIEMPRE en la primera línea)
-st.set_page_config(page_title="TRANSLOGEX ALERT – Sistema de alertas y validación.", layout="wide")
+st.set_page_config(page_title="TRANSLOGEX ALERT | Sistema de alertas y validación", layout="wide")
 
-# Ajuste CSS Corporativo global (aplica tanto al Login como al Buscador)
+# --- ESTILOS CSS CORPORATIVOS (PALETA TRANSLOGEX S.A.S.) ---
 st.markdown("""
 <style>
+    /* Botones con identidad corporativa Translogex */
     div.stButton > button:first-child, div.stFormSubmitButton > button:first-child {
-        background-color: #0F172A;
+        background-color: #843463;
         color: white;
-        border-radius: 4px;
+        border-radius: 6px;
         padding: 10px 24px;
         font-weight: 600;
         border: none;
+        letter-spacing: 0.5px;
+        transition: all 0.2s ease-in-out;
     }
     div.stButton > button:first-child:hover, div.stFormSubmitButton > button:first-child:hover {
-        background-color: #1D4ED8;
+        background-color: #632549;
         color: white;
+    }
+    
+    /* Encabezado del Login centrado y limpio */
+    .login-header {
+        text-align: center;
+        padding-bottom: 18px;
+        margin-bottom: 22px;
+        border-bottom: 3px solid #843463;
+    }
+    .login-brand {
+        font-size: 2.1rem;
+        font-weight: 800;
+        color: #843463;
+        letter-spacing: 1.5px;
+        margin: 0;
+        line-height: 1.2;
+        text-transform: uppercase;
+    }
+    .login-subtitle {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #1E1E1E;
+        letter-spacing: 0.5px;
+        margin-top: 6px;
+    }
+    .login-caption {
+        font-size: 0.88rem;
+        color: #64748B;
+        margin-top: 8px;
+    }
+
+    /* Encabezado del Panel Principal */
+    .main-header {
+        border-left: 5px solid #843463;
+        padding-left: 16px;
+        margin-bottom: 16px;
+    }
+    .main-brand {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #843463;
+        letter-spacing: 1.2px;
+        margin: 0;
+        line-height: 1.15;
+    }
+    .main-subtitle {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #1E1E1E;
+        margin-top: 4px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# --- CONFIGURACIÓN DE CREDENCIALES (3 USUARIOS Y 3 CONTRASEÑAS) ---
+# --- CONFIGURACIÓN DE CREDENCIALES (4 USUARIOS Y 4 CONTRASEÑAS) ---
 USUARIOS_AUTORIZADOS = {
     "admin_aml": "Cumplimiento2026*",
     "analista_senior": "Auditoria#849",
-    "gerencia_riesgos": "Directivo$AML99"
+    "gerencia_riesgos": "Directivo$AML99",
+    "operaciones_oplg": "Logistica%753"
 }
 
 # Inicializar estado de sesión
@@ -41,12 +95,16 @@ if "usuario_actual" not in st.session_state:
 # --- PANTALLA DE INICIO DE SESIÓN ---
 if not st.session_state["autenticado"]:
     st.markdown("<br><br>", unsafe_allow_html=True)
-    col_l1, col_l2, col_l3 = st.columns([1, 1.4, 1])
+    col_l1, col_l2, col_l3 = st.columns([1, 1.3, 1])
     
     with col_l2:
-        st.title("TRANSLOGEX ALERT – Sistema de alertas y validación.")
-        st.markdown("Plataforma corporativa de debida diligencia y cumplimiento normativo. Ingrese sus credenciales asignadas.")
-        st.divider()
+        st.markdown("""
+        <div class="login-header">
+            <div class="login-brand">TRANSLOGEX ALERT</div>
+            <div class="login-subtitle">Sistema de alertas y validación</div>
+            <div class="login-caption">Plataforma corporativa de debida diligencia y cumplimiento normativo</div>
+        </div>
+        """, unsafe_allow_html=True)
         
         with st.form("formulario_login", clear_on_submit=False):
             usuario_input = st.text_input("Usuario", placeholder="Ingrese su usuario")
@@ -63,7 +121,6 @@ if not st.session_state["autenticado"]:
                 else:
                     st.error("Credenciales inválidas. Verifique su usuario y contraseña.")
                     
-    # Detiene la ejecución aquí para que nadie vea el sistema sin iniciar sesión
     st.stop()
 
 # =====================================================================
@@ -187,8 +244,14 @@ with st.sidebar:
     * 🔗 [ANT (Multas de Tránsito)](https://consultaweb.ant.gob.ec/PortalWEB/paginas/clientes/clp_criterio_consulta.jsp)
     """)
 
-# --- INTERFAZ VISUAL ---
-st.title("TRANSLOGEX ALERT – Sistema de alertas y validación.")
+# --- INTERFAZ VISUAL PRINCIPAL ---
+st.markdown("""
+<div class="main-header">
+    <div class="main-brand">TRANSLOGEX ALERT</div>
+    <div class="main-subtitle">Sistema de alertas y validación</div>
+</div>
+""", unsafe_allow_html=True)
+
 st.markdown("Sistema automatizado de cruce de datos contra listas restrictivas y vinculantes a nivel global: \n**Oficina de Control de Activos Extranjeros (OFAC SDN & Non-SDN), Consejo de Seguridad de las Naciones Unidas (ONU), Organización Internacional de Policía Criminal (Interpol - Notificaciones Rojas), Sanciones Financieras de la Unión Europea (UE), Departamento de Estado de EE.UU. (Organizaciones Terroristas Extranjeras - FTO) y más de 15 agencias gubernamentales internacionales consolidadas.**")
 st.divider()
 
