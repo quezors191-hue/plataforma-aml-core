@@ -5,7 +5,7 @@ import re
 import os
 
 # 1. Configuración de página (SIEMPRE en la primera línea)
-st.set_page_config(page_title="Plataforma AML", layout="wide")
+st.set_page_config(page_title="TRANSLOGEX ALERT – Sistema de alertas y validación.", layout="wide")
 
 # Ajuste CSS Corporativo global (aplica tanto al Login como al Buscador)
 st.markdown("""
@@ -41,10 +41,10 @@ if "usuario_actual" not in st.session_state:
 # --- PANTALLA DE INICIO DE SESIÓN ---
 if not st.session_state["autenticado"]:
     st.markdown("<br><br>", unsafe_allow_html=True)
-    col_l1, col_l2, col_l3 = st.columns([1, 1.2, 1])
+    col_l1, col_l2, col_l3 = st.columns([1, 1.4, 1])
     
     with col_l2:
-        st.title("Acceso al Sistema AML")
+        st.title("TRANSLOGEX ALERT – Sistema de alertas y validación.")
         st.markdown("Plataforma corporativa de debida diligencia y cumplimiento normativo. Ingrese sus credenciales asignadas.")
         st.divider()
         
@@ -188,7 +188,7 @@ with st.sidebar:
     """)
 
 # --- INTERFAZ VISUAL ---
-st.title("Plataforma de Debida Diligencia y AML")
+st.title("TRANSLOGEX ALERT – Sistema de alertas y validación.")
 st.markdown("Sistema automatizado de cruce de datos contra listas restrictivas y vinculantes a nivel global: \n**Oficina de Control de Activos Extranjeros (OFAC SDN & Non-SDN), Consejo de Seguridad de las Naciones Unidas (ONU), Organización Internacional de Policía Criminal (Interpol - Notificaciones Rojas), Sanciones Financieras de la Unión Europea (UE), Departamento de Estado de EE.UU. (Organizaciones Terroristas Extranjeras - FTO) y más de 15 agencias gubernamentales internacionales consolidadas.**")
 st.divider()
 
